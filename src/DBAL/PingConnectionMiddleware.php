@@ -13,19 +13,14 @@ use Throwable;
  */
 final class PingConnectionMiddleware implements Middleware
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
      * Reconnects to the database if the connection is expired.
-     *
-     * @return mixed
      */
-    public function execute(object $command, callable $next)
+    public function execute(object $command, callable $next): mixed
     {
         if (! $this->ping($this->connection)) {
             $this->connection->close();
@@ -41,10 +36,10 @@ final class PingConnectionMiddleware implements Middleware
             $dummySelectSQL = $connection->getDatabasePlatform()->getDummySelectSQL();
 
             $connection->executeQuery($dummySelectSQL);
-
-            return true;
-        } catch (Throwable $exception) {
+        } catch (Throwable) {
             return false;
         }
+
+        return true;
     }
 }

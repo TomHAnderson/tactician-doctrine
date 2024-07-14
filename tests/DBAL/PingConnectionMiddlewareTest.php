@@ -30,12 +30,11 @@ final class PingConnectionMiddlewareTest extends TestCase
         $this->middleware = new PingConnectionMiddleware($this->connection);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function itShouldReconnectIfConnectionExpires(): void
     {
-        $this->connection->expects(self::once())->method('getDatabasePlatform')->willThrowException(new Exception());
+        $this->connection->expects(self::once())
+            ->method('getDatabasePlatform')->willThrowException(new Exception());
         $this->connection->expects(self::once())->method('close');
         $this->connection->expects(self::once())->method('connect');
 
@@ -49,17 +48,17 @@ final class PingConnectionMiddlewareTest extends TestCase
         self::assertEquals(1, $executed);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function itShouldReconnectIfConnectionRaiseError(): void
     {
-        $this->connection->expects(self::once())->method('getDatabasePlatform')->willReturnCallback(static function (): void {
-            trigger_error(
-                'Now really is not a good time',
-                E_USER_ERROR
-            );
-        });
+        $this->connection->expects(self::once())
+            ->method('getDatabasePlatform')
+            ->willReturnCallback(static function (): void {
+                trigger_error(
+                    'Now really is not a good time',
+                    E_USER_ERROR,
+                );
+            });
         $this->connection->expects(self::once())->method('close');
         $this->connection->expects(self::once())->method('connect');
 
@@ -73,16 +72,14 @@ final class PingConnectionMiddlewareTest extends TestCase
         self::assertEquals(1, $executed);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function itShouldNotReconnectIfConnectionIsStillAlive(): void
     {
         $abstractPlatform = $this->createMock(AbstractPlatform::class);
         $abstractPlatform->method('getDummySelectSQL')->willReturn('');
 
-        $this->connection->expects(self::once())->method('getDatabasePlatform')->willReturn($abstractPlatform);
-
+        $this->connection->expects(self::once())
+            ->method('getDatabasePlatform')->willReturn($abstractPlatform);
         $this->connection->expects(self::once())->method('executeQuery');
         $this->connection->expects(self::never())->method('close');
         $this->connection->expects(self::never())->method('connect');

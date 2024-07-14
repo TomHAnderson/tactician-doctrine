@@ -14,22 +14,17 @@ use Throwable;
  */
 class TransactionMiddleware implements Middleware
 {
-    protected Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
      * Executes the given command and optionally returns a value
      *
-     * @return mixed
-     *
      * @throws Exception
      * @throws Throwable
      */
-    public function execute(object $command, callable $next)
+    public function execute(object $command, callable $next): mixed
     {
         $this->connection->beginTransaction();
 

@@ -11,22 +11,17 @@ use Throwable;
 
 class RollbackOnlyTransactionMiddleware implements Middleware
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
      * Executes the given command and optionally returns a value
      *
-     * @return mixed
-     *
      * @throws Throwable
      * @throws Exception
      */
-    public function execute(object $command, callable $next)
+    public function execute(object $command, callable $next): mixed
     {
         $this->entityManager->beginTransaction();
 

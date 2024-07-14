@@ -57,7 +57,8 @@ class TransactionMiddlewareTest extends TestCase
         $this->entityManager->expects(self::never())->method('commit');
         $this->entityManager->expects(self::never())->method('flush');
         $this->entityManager->expects(self::once())->method('rollback');
-        $this->connection->expects(self::once())->method('isTransactionActive')->willReturn(false);
+        $this->connection->expects(self::once())
+            ->method('isTransactionActive')->willReturn(false);
         $this->connection->expects(self::never())->method('isRollbackOnly');
         $this->entityManager->expects(self::once())->method('close');
 
@@ -75,8 +76,10 @@ class TransactionMiddlewareTest extends TestCase
         $this->entityManager->expects(self::never())->method('commit');
         $this->entityManager->expects(self::never())->method('flush');
         $this->entityManager->expects(self::once())->method('rollback');
-        $this->connection->expects(self::once())->method('isTransactionActive')->willReturn(true);
-        $this->connection->expects(self::once())->method('isRollbackOnly')->willReturn(true);
+        $this->connection->expects(self::once())
+            ->method('isTransactionActive')->willReturn(true);
+        $this->connection->expects(self::once())->method('isRollbackOnly')
+            ->willReturn(true);
         $this->entityManager->expects(self::once())->method('close');
 
         $next = static function (): void {
@@ -93,8 +96,10 @@ class TransactionMiddlewareTest extends TestCase
         $this->entityManager->expects(self::never())->method('commit');
         $this->entityManager->expects(self::never())->method('flush');
         $this->entityManager->expects(self::once())->method('rollback');
-        $this->connection->expects(self::once())->method('isTransactionActive')->willReturn(true);
-        $this->connection->expects(self::once())->method('isRollbackOnly')->willReturn(false);
+        $this->connection->expects(self::once())
+            ->method('isTransactionActive')->willReturn(true);
+        $this->connection->expects(self::once())
+            ->method('isRollbackOnly')->willReturn(false);
         $this->entityManager->expects(self::never())->method('close');
 
         $next = static function (): void {
@@ -111,7 +116,8 @@ class TransactionMiddlewareTest extends TestCase
         $this->entityManager->expects(self::never())->method('commit');
         $this->entityManager->expects(self::never())->method('flush');
         $this->entityManager->expects(self::once())->method('rollback');
-        $this->connection->expects(self::once())->method('isTransactionActive')->willReturn(false);
+        $this->connection->expects(self::once())
+            ->method('isTransactionActive')->willReturn(false);
         $this->connection->expects(self::never())->method('isRollbackOnly');
         $this->entityManager->expects(self::once())->method('close');
 
